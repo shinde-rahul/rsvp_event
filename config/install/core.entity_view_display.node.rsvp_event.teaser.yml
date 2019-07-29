@@ -4,6 +4,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.rsvp_event.body
+    - field.field.node.rsvp_event.field_venue
     - node.type.rsvp_event
   module:
     - text
@@ -15,7 +16,7 @@ mode: teaser
 content:
   body:
     label: hidden
-    type: text_summary_or_trimmed
+    type: text_trimmed
     weight: 101
     settings:
       trim_length: 600
@@ -23,7 +24,8 @@ content:
     region: content
   links:
     weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
-hidden: {  }
+hidden:
+  field_venue: true
