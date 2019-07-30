@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.rsvp_event.body
-    - field.field.node.rsvp_event.field_venue
+    - field.field.node.rsvp_event.field_location
     - node.type.rsvp_event
   module:
     - text
@@ -16,21 +16,24 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 101
+    weight: 1
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_venue:
-    weight: 102
-    label: inline
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
+  field_rsvp_form:
+    weight: 2
     region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_rsvp_user_list:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
-    weight: 100
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_location: true

@@ -2,16 +2,14 @@ langcode: en
 status: true
 dependencies:
   module:
+    - geolocation
     - node
-id: node.field_venue
-field_name: field_venue
+id: node.field_location
+field_name: field_location
 entity_type: node
-type: string
-settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
-module: core
+type: geolocation
+settings: {  }
+module: geolocation
 locked: false
 cardinality: 1
 translatable: true
