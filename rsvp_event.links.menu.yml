@@ -1,0 +1,5 @@
+entity.rsvp_confirmation.overview:
+  title: RSVP Confirmations
+  parent: system.admin_structure
+  description: 'List of rsvp confirmations to extend site functionality.'
+  route_name: entity.rsvp_confirmation.collection

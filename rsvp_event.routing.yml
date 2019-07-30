@@ -1,0 +1,31 @@
+entity.rsvp_confirmation.collection:
+  path: '/admin/structure/rsvp-confirmation'
+  defaults:
+    _entity_list: 'rsvp_confirmation'
+    _title: 'RSVP Confirmation configuration'
+  requirements:
+    _permission: 'administer rsvp_confirmation'
+
+entity.rsvp_confirmation.add_form:
+  path: '/admin/structure/rsvp_confirmation/add'
+  defaults:
+    _entity_form: 'rsvp_confirmation.add'
+    _title: 'Add a rsvp confirmation'
+  requirements:
+    _permission: 'administer rsvp_confirmation'
+
+entity.rsvp_confirmation.edit_form:
+  path: '/admin/structure/rsvp-confirmation/{rsvp_confirmation}'
+  defaults:
+    _entity_form: 'rsvp_confirmation.edit'
+    _title: 'Edit a rsvp confirmation'
+  requirements:
+    _permission: 'administer rsvp_confirmation'
+
+entity.rsvp_confirmation.delete_form:
+  path: '/admin/structure/rsvp-confirmation/{rsvp_confirmation}/delete'
+  defaults:
+    _entity_form: 'rsvp_confirmation.delete'
+    _title: 'Delete a rsvp confirmation'
+  requirements:
+    _permission: 'administer rsvp_confirmation'

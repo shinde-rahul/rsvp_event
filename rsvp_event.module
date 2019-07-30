@@ -1,0 +1,93 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\rsvp_event\Entity\RSVPConfirmation;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ *
+ * Add pseudo field for rsvp_event.
+ */
+function rsvp_event_entity_extra_field_info() {
+  $extra = [];
+  $extra['node']['rsvp_event']['display']['field_rsvp_form'] = [
+    'label' => t('RSVP form'),
+    'description' => t('RSVP form for the node.'),
+    'visible' => FALSE,
+  ];
+  $extra['node']['rsvp_event']['display']['field_rsvp_user_list'] = [
+    'label' => t('RSVP\'d user list'),
+    'description' => t('RSVP form for the node.'),
+    'visible' => FALSE,
+  ];
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+
+  // Add the form or related message to event view.
+  if ($display->getComponent('field_rsvp_form')) {
+
+    $build['field_rsvp_form'] = [
+      '#cache' => [
+        'max-age' => 0,
+      ],
+      '#theme' => 'block',
+      '#plugin_id' => 'rsvp-form',
+      '#configuration' => [
+        'label' => 'Are you going?',
+        'label_display' => 'visible',
+      ],
+      '#id' => 'rsvp-form',
+      '#attributes' => [
+        'class' => ['rsvp-form']
+      ],
+    ];
+
+    // Check if the current user has signed up for the viewing event or not.
+    $rsvp_confirmation = RSVPConfirmation::getEventConfirmationForCurrentUser($entity->id());
+
+    if (!\Drupal::currentUser()->isAuthenticated()) {
+      $content = [
+        '#markup' => '<div class="message">' . t('Please sign up to RSVP for this event.') . '</div>'
+      ];
+    }
+    elseif (!empty($rsvp_confirmation)) {
+      $content = [
+        '#markup' => '<div class="message">' . t('You have already RSVP\'d for this event.') . '</div>'
+      ];
+    }
+    else {
+      $content = \Drupal::formBuilder()->getForm('\Drupal\rsvp_event\Form\RSVPForm');
+    }
+
+    $build['field_rsvp_form']['content'] = $content;
+  }
+
+  // Show User List field.
+  if ($display->getComponent('field_rsvp_user_list')) {
+    $rsvp_confirmations = RSVPConfirmation::getUserListforEvent($entity->id());
+    $user_list = [];
+    if (!empty($rsvp_confirmations)) {
+      foreach ($rsvp_confirmations as $rsvp_confirmation) {
+        if (!$rsvp_confirmation->isHideMe()) {
+          $user_list[] = $rsvp_confirmation->getUserName();
+        }
+      }
+
+      $build['field_rsvp_user_list'] = [
+        '#theme' => 'item_list',
+        '#list_type' => 'ul',
+        '#title' => 'Going:',
+        '#items' => $user_list,
+        '#empty' => t('No sign ups yet!!'),
+        '#attributes' => ['class' => 'users'],
+        '#wrapper_attributes' => ['class' => 'container'],
+      ];
+    }
+  }
+}
