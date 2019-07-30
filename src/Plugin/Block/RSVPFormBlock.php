@@ -50,8 +50,8 @@ class RSVPFormBlock extends BlockBase {
   protected function getDistance(AccountInterface $account) {
     $node = $this->getContextValue('node');
     $user = User::load($account->id());
-    $user_loaction = $user->get('field_location')->first()->getValue();
-    $node_location = $node->get('field_location')->first()->getValue();
+    $user_loaction = !$user->get('field_location')->isEmpty() ? $user->get('field_location')->first()->getValue() : NULL;
+    $node_location = !$node->get('field_location')->isEmpty() ? $node->get('field_location')->first()->getValue() : NULL;
 
     if (!empty($user_loaction) &&  !empty($node_location)) {
       $user_lat = $user_loaction['lat'];
