@@ -3,6 +3,7 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\rsvp_event\Entity\RSVPConfirmation;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_entity_extra_field_info().
@@ -22,6 +23,25 @@ function rsvp_event_entity_extra_field_info() {
     'visible' => FALSE,
   ];
   return $extra;
+}
+
+/**
+ * Helper function to calculate the distance.
+ *
+ * @return float|int
+ */
+function _rsvp_event_distance($lat1, $lon1, $lat2, $lon2) {
+  if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+    return 0;
+  }
+  else {
+    $theta = $lon1 - $lon2;
+    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+    $dist = acos($dist);
+    $dist = rad2deg($dist);
+    $miles = $dist * 60 * 1.1515;
+    return $miles;
+  }
 }
 
 /**
@@ -51,6 +71,15 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
     // Check if the current user has signed up for the viewing event or not.
     $rsvp_confirmation = RSVPConfirmation::getEventConfirmationForCurrentUser($entity->id());
 
+    // Check the user and event distance.
+    $user = User::load(\Drupal::currentUser()->id());
+    $user_loaction = $user->get('field_location')->first()->getValue();
+    $node_location = $entity->get('field_location')->first()->getValue();
+
+    if (!empty($user_loaction) && !empty($node_location)) {
+      $miles = _rsvp_event_distance($user_loaction['lat'], $user_loaction['lng'], $node_location['lat'], $node_location['lng']);
+    }
+
     if (!\Drupal::currentUser()->isAuthenticated()) {
       $content = [
         '#markup' => '<div class="message">' . t('Please sign up to RSVP for this event.') . '</div>'
@@ -59,6 +88,11 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
     elseif (!empty($rsvp_confirmation)) {
       $content = [
         '#markup' => '<div class="message">' . t('You have already RSVP\'d for this event.') . '</div>'
+      ];
+    }
+    elseif ($miles > 20) {
+      $content = [
+        '#markup' => '<div class="message">' . t('You are far from this event.') . '</div>'
       ];
     }
     else {
@@ -78,16 +112,19 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
           $user_list[] = $rsvp_confirmation->getUserName();
         }
       }
-
-      $build['field_rsvp_user_list'] = [
-        '#theme' => 'item_list',
-        '#list_type' => 'ul',
-        '#title' => 'Going:',
-        '#items' => $user_list,
-        '#empty' => t('No sign ups yet!!'),
-        '#attributes' => ['class' => 'users'],
-        '#wrapper_attributes' => ['class' => 'container'],
-      ];
     }
+    $build['field_rsvp_user_list'] = [
+      '#theme' => 'item_list',
+      '#list_type' => 'ul',
+      '#title' => 'Going:',
+      '#items' => $user_list,
+      '#empty' => t('No sign ups yet!!'),
+      '#attributes' => ['class' => 'users'],
+      '#wrapper_attributes' => ['class' => 'container'],
+      '#cache' => [
+        'max-age' => 0,
+      ],
+    ];
+
   }
 }
