@@ -56,14 +56,20 @@ menu > Extend.
 CONFIGURATION
 -------------
 
-The module has no menu or modifiable settings. 
+* Adding field to user form
+    - Goto Configuration >> People >> Account settings (admin/config/people/accounts/form-display)
+    - Enable Location field
+* Update Geolocation settings
+    - Goto Configuration >> Web services (admin/config/services/geolocation)
+    - Add Google Maps API key
 
 
 ASSUMPTIONS
 -----------
 
 * Only authenticated users can RSVP for an event.
-* For anonymous user it should message.
+* For anonymous user it should show message for signup.
+
 
 
 MAINTAINERS
