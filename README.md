@@ -69,6 +69,8 @@ ASSUMPTIONS
 
 * Only authenticated users can RSVP for an event.
 * For anonymous user it should show message for signup.
+* Distance is calculated based on the longitude and latitude attached to the user and event.
+* The longitude and latitude for user is manual.
 
 
 
