@@ -137,37 +137,4 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
     return $this->hide_me;
   }
 
-  /**
-   * Check if a relation exists between current user and event.
-   *
-   * @return bool
-   *  If there's no record, return FALSE; otherwise, return TRUE.
-   */
-  public function getEventConfirmationForCurrentUser($nid) {
-    $uid = \Drupal::currentUser()->id();
-
-    $matched_entity = \Drupal::entityQuery('rsvp_confirmation')
-      ->condition('uid', $uid)
-      ->condition('nid', $nid)
-      ->execute();
-
-    return !empty($matched_entity);
-  }
-
-  /**
-   * Get the list of RSVP'd users.
-   *
-   * @return array|\Drupal\Core\Entity\EntityInterface[]|RSVPConfirmation[]
-   */
-  public function getUserListforEvent($nid) {
-    $results = \Drupal::entityQuery('rsvp_confirmation')
-      ->condition('nid', $nid)
-      ->execute();
-
-    $rsvp_confirmations = [];
-    if (!empty($results)) {
-      $rsvp_confirmations = RSVPConfirmation::loadMultiple(array_keys($results));
-    }
-    return $rsvp_confirmations;
-  }
 }
