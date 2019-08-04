@@ -1,0 +1,4 @@
+services:
+  rsvp_event.lookup:
+    class: Drupal\rsvp_event\RSVPEventLookup
+    arguments: ['@entity_type.manager', '@current_user', '@current_route_match']

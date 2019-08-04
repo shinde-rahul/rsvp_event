@@ -26,25 +26,6 @@ function rsvp_event_entity_extra_field_info() {
 }
 
 /**
- * Helper function to calculate the distance.
- *
- * @return float|int
- */
-function _rsvp_event_distance($lat1, $lon1, $lat2, $lon2) {
-  if (($lat1 == $lat2) && ($lon1 == $lon2)) {
-    return 0;
-  }
-  else {
-    $theta = $lon1 - $lon2;
-    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-    $dist = acos($dist);
-    $dist = rad2deg($dist);
-    $miles = $dist * 60 * 1.1515;
-    return $miles;
-  }
-}
-
-/**
  * Implements hook_ENTITY_TYPE_view().
  */
 function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
@@ -68,21 +49,16 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
       ],
     ];
 
+    $rsvp_lookup = \Drupal::service('rsvp_event.lookup');
+
     // Check if the current user has signed up for the viewing event or not.
-    $rsvp_confirmation = RSVPConfirmation::getEventConfirmationForCurrentUser($entity->id());
+    $rsvp_confirmation = $rsvp_lookup->getEventConfirmationForCurrentUser($entity->id());
 
     // Check the user and event distance.
-    $user = User::load(\Drupal::currentUser()->id());
-    $miles = 0;
-    if ($user->isAuthenticated()) {
-      $user_loaction = !$user->get('field_location')->isEmpty() ? $user->get('field_location')->first()->getValue() : NULL;
-      $node_location = !$entity->get('field_location')->isEmpty() ? $entity->get('field_location')->first()->getValue() : NULL;
-      if (!empty($user_loaction) && !empty($node_location)) {
-        $miles = _rsvp_event_distance($user_loaction['lat'], $user_loaction['lng'], $node_location['lat'], $node_location['lng']);
-      }
-    }
+    $miles = $rsvp_lookup->getRSVPDistance($entity->id());
+    $threshold_distance = $rsvp_lookup->getThresholdValue();
 
-    if ($user->isAnonymous()) {
+    if (\Drupal::currentUser()->isAnonymous()) {
       $content = [
         '#markup' => '<div class="message">' . t('Please sign up to RSVP for this event.') . '</div>'
       ];
@@ -92,7 +68,7 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
         '#markup' => '<div class="message">' . t('You have already RSVP\'d for this event.') . '</div>'
       ];
     }
-    elseif ($miles > 20) {
+    elseif ($miles > $threshold_distance) {
       $content = [
         '#markup' => '<div class="message">' . t('You are far from this event.') . '</div>'
       ];
@@ -106,7 +82,7 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
 
   // Show User List field.
   if ($display->getComponent('field_rsvp_user_list')) {
-    $rsvp_confirmations = RSVPConfirmation::getUserListforEvent($entity->id());
+    $rsvp_confirmations = \Drupal::service('rsvp_event.lookup')->getUserListforEvent($entity->id());
     $user_list = [];
     if (!empty($rsvp_confirmations)) {
       foreach ($rsvp_confirmations as $rsvp_confirmation) {
