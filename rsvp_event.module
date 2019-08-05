@@ -1,9 +1,12 @@
 <?php
 
+/**
+ * @file
+ * This is the RSVP Event module.
+ */
+
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\rsvp_event\Entity\RSVPConfirmation;
-use Drupal\user\Entity\User;
 
 /**
  * Implements hook_entity_extra_field_info().
@@ -18,7 +21,7 @@ function rsvp_event_entity_extra_field_info() {
     'visible' => FALSE,
   ];
   $extra['node']['rsvp_event']['display']['field_rsvp_user_list'] = [
-    'label' => t('RSVP\'d user list'),
+    'label' => t("RSVP'd user list"),
     'description' => t('RSVP form for the node.'),
     'visible' => FALSE,
   ];
@@ -45,7 +48,7 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
       ],
       '#id' => 'rsvp-form',
       '#attributes' => [
-        'class' => ['rsvp-form']
+        'class' => ['rsvp-form'],
       ],
     ];
 
@@ -60,17 +63,17 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
 
     if (\Drupal::currentUser()->isAnonymous()) {
       $content = [
-        '#markup' => '<div class="message">' . t('Please sign up to RSVP for this event.') . '</div>'
+        '#markup' => '<div class="message">' . t('Please sign up to RSVP for this event.') . '</div>',
       ];
     }
     elseif (!empty($rsvp_confirmation)) {
       $content = [
-        '#markup' => '<div class="message">' . t('You have already RSVP\'d for this event.') . '</div>'
+        '#markup' => '<div class="message">' . t("You have already RSVP'd for this event.") . '</div>',
       ];
     }
     elseif ($miles > $threshold_distance) {
       $content = [
-        '#markup' => '<div class="message">' . t('You are far from this event.') . '</div>'
+        '#markup' => '<div class="message">' . t('You are far from this event.') . '</div>',
       ];
     }
     else {

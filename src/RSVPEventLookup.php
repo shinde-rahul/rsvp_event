@@ -4,7 +4,6 @@ namespace Drupal\rsvp_event;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 
 /**
@@ -22,12 +21,14 @@ class RSVPEventLookup {
   /**
    * The current user.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
   /**
-   * @var RouteMatchInterface
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   private $routeMatch;
 
@@ -36,10 +37,14 @@ class RSVPEventLookup {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param AccountProxyInterface $current_user
-   * @param RouteMatchInterface $route_match
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountProxyInterface $current_user, RouteMatchInterface $route_match) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager,
+                              AccountProxyInterface $current_user,
+                              RouteMatchInterface $route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->routeMatch = $route_match;
@@ -47,8 +52,6 @@ class RSVPEventLookup {
 
   /**
    * Threshold distance in mile.
-   *
-   * @return int
    */
   public function getThresholdValue() {
     return 20;
@@ -57,15 +60,18 @@ class RSVPEventLookup {
   /**
    * Check if a relation exists between current user and event.
    *
-   * @param $nid
+   * @param int $nid
+   *   The event id.
+   *
    * @return bool|null
-   *  If there's no record, return FALSE; otherwise, return TRUE.
+   *   If there's no record, return FALSE; otherwise, return TRUE.
    */
   public function getEventConfirmationForCurrentUser($nid) {
     if (empty($nid)) {
       return NULL;
     }
 
+    // Get the current user id.
     $uid = $this->currentUser->id();
 
     $query = $this->entityTypeManager->getStorage('rsvp_confirmation')->getQuery();
@@ -79,8 +85,11 @@ class RSVPEventLookup {
   /**
    * Get the list of RSVP'd users.
    *
-   * @param $nid
+   * @param int $nid
+   *   The event id.
+   *
    * @return \Drupal\Core\Entity\EntityInterface[]|null
+   *   Returns list of users for the users.
    */
   public function getUserListforEvent($nid) {
     if (empty($nid)) {
@@ -95,12 +104,16 @@ class RSVPEventLookup {
   /**
    * Get the distance between the user and event locations.
    *
-   * @param $nid
+   * @param int $nid
+   *   The event id.
+   *
    * @return float|int
+   *   Returns the distance
    */
   public function getRSVPDistance($nid) {
+    $miles = 0;
     if (empty($nid)) {
-      return 0;
+      return $miles;
     }
 
     // Get the node.
@@ -118,13 +131,12 @@ class RSVPEventLookup {
       $node_lng = $node_location['lng'];
 
       $theta = $user_lng - $node_lng;
-      $dist = sin(deg2rad($user_lat)) * sin(deg2rad($node_lat)) +  cos(deg2rad($user_lat)) * cos(deg2rad($node_lat)) * cos(deg2rad($theta));
+      $dist = sin(deg2rad($user_lat)) * sin(deg2rad($node_lat)) + cos(deg2rad($user_lat)) * cos(deg2rad($node_lat)) * cos(deg2rad($theta));
       $dist = acos($dist);
       $dist = rad2deg($dist);
       $miles = $dist * 60 * 1.1515;
-      return $miles;
     }
-    return 0;
+    return $miles;
   }
 
 }

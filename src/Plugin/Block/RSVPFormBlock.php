@@ -7,7 +7,6 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\rsvp_event\RSVPEventLookup;
-use Drupal\user\Entity\User;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,16 +25,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RSVPFormBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The RSVP event lookup.
+   *
    * @var Drupal\rsvp_event\RSVPEventLookup|RSVPEventLookup
    */
   private $eventLookup;
 
   /**
    * RSVPFormBlock constructor.
+   *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param Drupal\rsvp_event\RSVPEventLookup $event_lookup
+   *   The RSVP Event lookup.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RSVPEventLookup $event_lookup) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -80,28 +86,6 @@ class RSVPFormBlock extends BlockBase implements ContainerFactoryPluginInterface
   public function build() {
     $form = \Drupal::formBuilder()->getForm('\Drupal\rsvp_event\Form\RSVPForm');
     return $form;
-  }
-
-  protected function getDistance(AccountInterface $account) {
-    $node = $this->getContextValue('node');
-    $user = User::load($account->id());
-    $user_loaction = !$user->get('field_location')->isEmpty() ? $user->get('field_location')->first()->getValue() : NULL;
-    $node_location = !$node->get('field_location')->isEmpty() ? $node->get('field_location')->first()->getValue() : NULL;
-
-    if (!empty($user_loaction) &&  !empty($node_location)) {
-      $user_lat = $user_loaction['lat'];
-      $user_lng = $user_loaction['lng'];
-      $node_lat = $node_location['lat'];
-      $node_lng = $node_location['lng'];
-
-      $theta = $user_lng - $node_lng;
-      $dist = sin(deg2rad($user_lat)) * sin(deg2rad($node_lat)) +  cos(deg2rad($user_lat)) * cos(deg2rad($node_lat)) * cos(deg2rad($theta));
-      $dist = acos($dist);
-      $dist = rad2deg($dist);
-      $miles = $dist * 60 * 1.1515;
-      return $miles;
-    }
-    return 0;
   }
 
 }

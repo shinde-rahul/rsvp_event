@@ -14,8 +14,9 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-RSVP Events module provides an Event content type that allows users to create events adding a Title, Description and 
-the Venue for the Event. This module also provides the RSVP form for the authenticated users to signup for 
+RSVP Events module provides an Event content type that allows users to create 
+events adding a Title, Description and the Venue for the Event. This module 
+also provides the RSVP form for the authenticated users to signup for 
 the particular Event. 
 
 
@@ -46,8 +47,8 @@ INSTALLATION
 1. This project installs like any other Drupal module. There is extensive
 documentation on how to do this here:
 https://drupal.org/documentation/install/modules-themes/modules-8 
-But essentially:nDownload the archive from https://github.com/shinde-rahul/rsvp and expand it into the modules/ 
-directory in your Drupal 8 installation.
+But essentially:nDownload the archive from https://github.com/shinde-rahul/rsvp
+and expand it into the modules/ directory in your Drupal 8 installation.
 
 2. Within Drupal, enable any Example sub-module you wish to explore in Admin
 menu > Extend.
@@ -66,7 +67,8 @@ ASSUMPTIONS
 
 * Only authenticated users can RSVP for an event.
 * For anonymous user it should show message for signup.
-* Distance is calculated based on the longitude and latitude attached to the user and event.
+* Distance is calculated based on the longitude and latitude attached to  
+the user and event.
 * The longitude and latitude for user is manual.
 
 

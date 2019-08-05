@@ -32,7 +32,4 @@ class RsvpConfirmationListBuilder extends ConfigEntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
-//  public function getOperations(EntityInterface $entity) {
-//    return [];
-//  }
 }

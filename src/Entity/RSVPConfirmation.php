@@ -3,8 +3,9 @@
 namespace Drupal\rsvp_event\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\Annotation\ConfigEntityType;
+use Drupal\node\Entity\Node;
 use Drupal\rsvp_event\RSVPConfirmationInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Defines the rsvp confirmation entity type.
@@ -72,7 +73,7 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
    * Get user ID.
    *
    * @return int
-   *  User ID.
+   *   User ID.
    */
   public function getUid() {
     return $this->uid;
@@ -82,7 +83,7 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
    * Get node ID.
    *
    * @return int
-   *  Node ID.
+   *   Node ID.
    */
   public function getNid() {
     return $this->nid;
@@ -92,10 +93,10 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
    * Get the username.
    *
    * @return string|null
-   *  User's username.
+   *   User's username.
    */
   public function getUserName() {
-    $account = \Drupal\user\Entity\User::load($this->uid);
+    $account = User::load($this->uid);
     $name = $account->getUsername();
 
     return $name;
@@ -105,10 +106,10 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
    * Get the user email.
    *
    * @return string|null
-   *  The user's email.
+   *   The user's email.
    */
   public function getUserEmail() {
-    $account = \Drupal\user\Entity\User::load($this->uid);
+    $account = User::load($this->uid);
     $email = $account->getEmail();
 
     return $email;
@@ -118,10 +119,10 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
    * Get the event name.
    *
    * @return string|null
-   *  The event name.
+   *   The event name.
    */
   public function getEventName() {
-    $node = \Drupal\node\Entity\Node::load($this->nid);
+    $node = Node::load($this->nid);
     $name = $node->getTitle();
 
     return $name;
@@ -131,7 +132,7 @@ class RSVPConfirmation extends ConfigEntityBase implements RSVPConfirmationInter
    * Get the hide me .
    *
    * @return bool|null
-   *  The hide me value.
+   *   The hide me value.
    */
   public function isHideMe() {
     return $this->hide_me;

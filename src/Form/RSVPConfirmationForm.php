@@ -32,7 +32,7 @@ class RSVPConfirmationForm extends EntityForm {
     $form['uid'] = [
       '#type' => 'number',
       '#title' => $this->t('User ID'),
-      '#description' => $this->t('The ID of the user who RSVP\'d for this event.'),
+      '#description' => $this->t("The ID of the user who RSVP'd for this event."),
       '#default_value' => $this->entity->getUid(),
       '#machine_name' => [
         'exists' => '\Drupal\rsvp_event\Entity\RSVPConfirmation::load',
@@ -78,8 +78,8 @@ class RSVPConfirmationForm extends EntityForm {
       '%event' => $this->entity->getEventName(),
     ];
     $message = $result == SAVED_NEW
-      ? $this->t('You have successfully added %user\'s RSVP for %event.', $message_args)
-      : $this->t('You have successfully updated %user\'s RSVP for %event.', $message_args);
+      ? $this->t("You have successfully added %user's RSVP for %event.", $message_args)
+      : $this->t("You have successfully updated %user's RSVP for %event.", $message_args);
     $this->messenger()->addStatus($message);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
 

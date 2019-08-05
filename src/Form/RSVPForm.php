@@ -4,35 +4,42 @@ namespace Drupal\rsvp_event\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\rsvp_event\Entity\RSVPConfirmation;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 /**
- * Class RSVPForm
+ * Class RSVPForm.
+ *
  * @package Drupal\rsvp_event\Form
  */
-class RSVPForm extends FormBase {
+class RSVPForm extends FormBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var AccountInterface
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
   private $account;
 
   /**
-   * @var RouteMatchInterface
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  private $route_match;
+  private $routeMatch;
 
   /**
    * RSVPForm constructor.
-   * @param AccountInterface $account
-   * @param EntityTypeManagerInterface $entity_type_manager
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The Current user.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    */
   public function __construct(AccountInterface $account, RouteMatchInterface $route_match) {
     $this->account = $account;
@@ -75,7 +82,7 @@ class RSVPForm extends FormBase {
         'callback' => '::setRSVP',
         'wrapper' => 'rsvp-form-wrapper',
         'method' => 'replace',
-        'effect' => 'fade'
+        'effect' => 'fade',
       ],
     ];
 
@@ -103,7 +110,7 @@ class RSVPForm extends FormBase {
       'id' => time(),
       'uid' => intval($uid),
       'nid' => intval($node->id()),
-      'hide_me' => $form_state->getValue('hide_me')
+      'hide_me' => $form_state->getValue('hide_me'),
     ]);
 
     // Save RSVP confirmation.
@@ -113,7 +120,7 @@ class RSVPForm extends FormBase {
     $response->addCommand(
       new HtmlCommand(
         '#rsvp-form-wrapper',
-        '<div class="rsvp-form">' .  $this->t('You have successfully RSVP\'d for %event', ['%event' => $confirmation->getEventName()]) . '</div>'
+        '<div class="rsvp-form">' . $this->t("You have successfully RSVP'd for %event", ['%event' => $confirmation->getEventName()]) . '</div>'
       )
     );
     return $response;
