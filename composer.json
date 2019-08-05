@@ -1,7 +1,7 @@
 {
     "name": "shinde-rahul/rsvp_event",
     "type": "drupal-module",
-    "description": "Provides RSVP event content type and related configuration. Use &lt;em&gt;events&lt;/em&gt; for creating contents that authenticated users can RSVP for.",
+    "description": "Provides RSVP event content type and related configuration. Use events for creating contents that authenticated users can RSVP for.",
     "keywords": ["Drupal"],
     "homepage": "https://github.com/shinde-rahul/rsvp_event/issues",
     "authors": [
