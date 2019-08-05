@@ -85,20 +85,12 @@ function rsvp_event_node_view(array &$build, EntityInterface $entity, EntityView
 
   // Show User List field.
   if ($display->getComponent('field_rsvp_user_list')) {
-    $rsvp_confirmations = \Drupal::service('rsvp_event.lookup')->getUserListforEvent($entity->id());
-    $user_list = [];
-    if (!empty($rsvp_confirmations)) {
-      foreach ($rsvp_confirmations as $rsvp_confirmation) {
-        if (!$rsvp_confirmation->isHideMe()) {
-          $user_list[] = $rsvp_confirmation->getUserName();
-        }
-      }
-    }
+    $rsvp_users = \Drupal::service('rsvp_event.lookup')->getUserNameList($entity->id());
     $build['field_rsvp_user_list'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ul',
       '#title' => 'Going:',
-      '#items' => $user_list,
+      '#items' => $rsvp_users,
       '#empty' => t('No sign ups yet!!'),
       '#attributes' => ['class' => 'users'],
       '#wrapper_attributes' => ['class' => 'container'],

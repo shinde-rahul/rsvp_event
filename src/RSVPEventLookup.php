@@ -89,7 +89,7 @@ class RSVPEventLookup {
    *   The event id.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]|null
-   *   Returns list of users for the users.
+   *   Returns list of users for the event.
    */
   public function getUserListforEvent($nid) {
     if (empty($nid)) {
@@ -99,6 +99,32 @@ class RSVPEventLookup {
     $rsvp_confirmations = $query->loadByProperties(['nid' => $nid]);
 
     return $rsvp_confirmations;
+  }
+
+  /**
+   * Get the list of RSVP'd user names.
+   *
+   * @param int $nid
+   *   The event id.
+   *
+   * @return array|null
+   *   Returns list of user name for the event.
+   */
+  public function getUserNameList($nid) {
+    if (empty($nid)) {
+      return NULL;
+    }
+    $rsvp_confirmations = $this->getUserListforEvent($nid);
+    $user_list = [];
+    if (!empty($rsvp_confirmations)) {
+      foreach ($rsvp_confirmations as $rsvp_confirmation) {
+        if (!$rsvp_confirmation->isHideMe()) {
+          $user_list[] = $rsvp_confirmation->getUserName();
+        }
+      }
+    }
+
+    return $user_list;
   }
 
   /**
