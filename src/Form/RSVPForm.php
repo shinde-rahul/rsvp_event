@@ -4,12 +4,12 @@ namespace Drupal\rsvp_event\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\rsvp_event\Entity\RSVPConfirmation;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,21 +17,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\rsvp_event\Form
  */
-class RSVPForm extends FormBase implements ContainerFactoryPluginInterface {
+class RSVPForm extends FormBase implements ContainerInjectionInterface {
 
   /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
-  private $account;
+  protected $account;
 
   /**
    * The route match.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  private $routeMatch;
+  protected $routeMatch;
 
   /**
    * RSVPForm constructor.
