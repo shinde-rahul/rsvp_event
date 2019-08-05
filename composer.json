@@ -17,5 +17,7 @@
         "source": "https://github.com/shinde-rahul/rsvp_event"
     },
     "license": "GPL-2.0-or-later",
-    "require": { }
+    "require": {
+        "drupal/geolocation": "~1.11"
+    }
 }
