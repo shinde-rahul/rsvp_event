@@ -53,6 +53,12 @@ and expand it into the modules/ directory in your Drupal 8 installation.
 2. Within Drupal, enable any Example sub-module you wish to explore in Admin
 menu > Extend.
 
+You can use composer to download this module and drush to enable it,
+```
+composer require shinde-rahul\rsvp_event
+drush en rsvp_event -y
+```
+
 
 CONFIGURATION
 -------------
