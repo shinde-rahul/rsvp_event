@@ -16,25 +16,6 @@
         "issues": "https://github.com/shinde-rahul/rsvp_event/issues",
         "source": "https://github.com/shinde-rahul/rsvp_event"
     },
-    "license": "GPL-2.0+",
-    "require": { },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "shinde-rahul/rsvp_event",
-                "version": "dev-master",
-                "type":"drupal-module",
-                "source": {
-                    "url": "https://github.com/grahl/term_csv_tree_import.git",
-                    "type": "git",
-                    "reference": "development"
-                }
-            }
-        }
-    ]
+    "license": "GPL-2.0-or-later",
+    "require": { }
 }
