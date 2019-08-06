@@ -5,11 +5,11 @@ namespace Drupal\rsvp_event\Form;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\rsvp_event\Entity\RSVPConfirmation;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,16 +34,26 @@ class RSVPForm extends FormBase implements ContainerInjectionInterface {
   protected $routeMatch;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * RSVPForm constructor.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The Current user.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(AccountInterface $account, RouteMatchInterface $route_match) {
+  public function __construct(AccountInterface $account, RouteMatchInterface $route_match, EntityTypeManagerInterface $entity_type_manager) {
     $this->account = $account;
     $this->routeMatch = $route_match;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -52,7 +62,8 @@ class RSVPForm extends FormBase implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('current_user'),
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -106,7 +117,7 @@ class RSVPForm extends FormBase implements ContainerInjectionInterface {
     $node = $this->routeMatch->getParameter('node');
 
     // Create RSVP confirmation relation.
-    $confirmation = RSVPConfirmation::create([
+    $confirmation = $this->entityTypeManager->getStorage('rsvp_confirmation')->create([
       'id' => time(),
       'uid' => intval($uid),
       'nid' => intval($node->id()),
