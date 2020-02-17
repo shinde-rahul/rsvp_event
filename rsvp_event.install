@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Contains install, update and uninstall functions for the RSVP event module.
+ */
+
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\InstallStorage;
+
+/**
+ * Implements hook_install().
+ *
+ * Override Standard profile's user settings with our own.
+ */
+function rsvp_event_install() {
+
+  // Read the configuration for override from 'config/optional' folder.
+  $module_handler = \Drupal::moduleHandler();
+  $optional_install_path = $module_handler->getModule('rsvp_event')->getPath() . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
+  $storage = new FileStorage($optional_install_path);
+
+  // Iterate through the config files.
+  foreach ($storage->listAll() as $config_name) {
+    // Read the configuration from config storage.
+    $data = $storage->read($config_name);
+    // Merge the configuration.
+    \Drupal::configFactory()->getEditable($config_name)->merge($data)->save();
+  }
+  return t('Updated user form and display settings.');
+}

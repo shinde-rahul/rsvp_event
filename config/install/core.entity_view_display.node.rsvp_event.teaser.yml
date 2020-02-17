@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.rsvp_event.body
+    - field.field.node.rsvp_event.field_location
+    - node.type.rsvp_event
+  module:
+    - text
+    - user
+id: node.rsvp_event.teaser
+targetEntityType: node
+bundle: rsvp_event
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_location: true
+  field_rsvp_form: true
+  field_rsvp_user_list: true

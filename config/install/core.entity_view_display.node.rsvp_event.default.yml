@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.rsvp_event.body
+    - field.field.node.rsvp_event.field_location
+    - node.type.rsvp_event
+  module:
+    - text
+    - user
+id: node.rsvp_event.default
+targetEntityType: node
+bundle: rsvp_event
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_rsvp_form:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_rsvp_user_list:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_location: true

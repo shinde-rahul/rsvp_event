@@ -1,0 +1,18 @@
+rsvp_event.rsvp_confirmation.*:
+  type: config_entity
+  label: RSVP Confirmation
+  mapping:
+    id:
+      type: string
+      label: ID
+    uid:
+      type: integer
+      label: 'User ID'
+    nid:
+      type: integer
+      label: 'Node ID'
+    hide_me:
+      type: boolean
+      label: 'Hide me'
+    uuid:
+      type: string
